@@ -1,0 +1,53 @@
+version: '3.9'
+services:
+  mongodb:
+    restart: always
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo_password
+  postgres:
+    restart: always
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postgres_password
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 2s
+      timeout: 1s
+      retries: 5
+  frontend:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./frontend
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    ports:
+      - '3000:3000'
+    depends_on:
+      backend:
+        condition: service_started
+  backend:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    command: reflex -r "\.go$$" -s -- sh -c "go run ./"
+    environment:
+      - MONGOUSER=mongo
+      - MONGOPASSWORD=mongo_password
+      - MONGOPORT=27017
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=postgres_password
+      - PGPORT=5432
+      - DOMAIN=localhost
+    depends_on:
+      mongodb:
+        condition: service_started
+      postgres:
+        condition: service_healthy
