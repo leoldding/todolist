@@ -42,7 +42,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	}
 	if count != 0 {
 		log.Printf("User exists already!")
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -100,7 +100,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	expiresAt := time.Now().Add(5 * time.Minute)
 
 	// insert session token values into database
-	_, err = postgres.Exec("INSERT INTO sessions(sessionname, username, expiration) VALUES ($1, $2, $3)", sessionToken, creds.Username, expiresAt)
+	_, err = postgres.Exec("INSERT INTO sessions(sessionname, username, expiration) VALUES ($1, $2, $3);", sessionToken, creds.Username, expiresAt)
 	if err != nil {
 		log.Printf("Postgres insert session error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -114,10 +114,92 @@ func login(w http.ResponseWriter, r *http.Request) {
 		Expires: expiresAt,
 	})
 
+	w.WriteHeader(http.StatusOK)
 	return
 }
 
 func logout(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "logging out")
+	// retrieve cookie
+	sessionToken, err := r.Cookie("sessionToken")
+	if err != nil {
+		log.Printf("Cookie does not exist: %v", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// check if session exists
+	var username string
+	row := postgres.QueryRow("SELECT username FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+	err = row.Scan(&username)
+	if err != nil {
+		log.Printf("Session does not exist: %v", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// remove session from database
+	_, err = postgres.Exec("DELETE FROM sessions WHERE username = $1;", username)
+	if err != nil {
+		log.Printf("Postgres delete from sessions error: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// unset cookie
+	http.SetCookie(w, &http.Cookie{})
+
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+func refresh(w http.ResponseWriter, r *http.Request) {
+	// retrieve cookie
+	sessionToken, err := r.Cookie("sessionToken")
+	if err != nil {
+		log.Printf("Cookie does not exist: %v", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// check if session exists
+	var username string
+	row := postgres.QueryRow("SELECT username FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+	err = row.Scan(&username)
+	if err != nil {
+		log.Printf("Session does not exist: %v", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// check if cookie has expired
+	if sessionToken.Expires.Before(time.Now()) {
+		_, err = postgres.Exec("DELETE FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+		if err != nil {
+			log.Printf("Session deletion error: %v", err)
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+	}
+
+	// create session token
+	newSessionToken := uuid.New().String()
+	expiresAt := time.Now().Add(5 * time.Minute)
+
+	// insert session token values into database
+	_, err = postgres.Exec("INSERT INTO sessions(sessionname, username, expiration) VALUES ($1, $2, $3);", newSessionToken, username, expiresAt)
+	if err != nil {
+		log.Printf("Postgres insert session error: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// set new cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:    "sessionToken",
+		Value:   newSessionToken,
+		Expires: expiresAt,
+	})
+
+	w.WriteHeader(http.StatusOK)
 	return
 }
