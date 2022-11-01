@@ -40,8 +40,10 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	// check if username already exists
 	if count != 0 {
-		log.Printf("User exists already!")
+		log.Printf("Username exists already!")
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
@@ -109,9 +111,10 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	// set cookie
 	http.SetCookie(w, &http.Cookie{
-		Name:    "sessionToken",
-		Value:   sessionToken,
-		Expires: expiresAt,
+		Name:     "sessionToken",
+		Value:    sessionToken,
+		Expires:  expiresAt,
+		HttpOnly: true,
 	})
 
 	w.WriteHeader(http.StatusOK)
@@ -195,9 +198,10 @@ func refresh(w http.ResponseWriter, r *http.Request) {
 
 	// set new cookie
 	http.SetCookie(w, &http.Cookie{
-		Name:    "sessionToken",
-		Value:   newSessionToken,
-		Expires: expiresAt,
+		Name:     "sessionToken",
+		Value:    newSessionToken,
+		Expires:  expiresAt,
+		HttpOnly: true,
 	})
 
 	w.WriteHeader(http.StatusOK)

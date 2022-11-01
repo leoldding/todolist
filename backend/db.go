@@ -10,7 +10,6 @@ import (
 	"log"
 	"os"
 	"sync"
-	"time"
 )
 
 var postgres *sql.DB
@@ -59,14 +58,15 @@ func connectMongo() {
 	// create mongodb uri
 	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", os.Getenv("MONGOUSER"), os.Getenv("MONGOPASSWORD"), os.Getenv("DOMAIN"), os.Getenv("MONGOPORT"))
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
 	// connect to mongodb
-	mongodb, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	mongodb, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	if err != nil {
+		log.Printf("Error connectiong to MongoDB: %v", err)
+		return
+	}
 	defer func() {
-		if err = mongodb.Disconnect(ctx); err != nil {
-			log.Printf("Error connecting to MongoDB: %v", err)
+		if err = mongodb.Disconnect(context.TODO()); err != nil {
+			log.Printf("MongoDB disconnect error: %v", err)
 		}
 	}()
 
