@@ -22,7 +22,10 @@ services:
       dockerfile: Dockerfile.dev
       context: ./frontend
     volumes:
-      - ./frontend:/usr/share/nginx/html
+      - /app/node_modules
+      - ./frontend:/app
+    environment:
+      - WDS_SOCKET_PORT=0
     depends_on:
       backend:
         condition: service_started
