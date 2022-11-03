@@ -23,8 +23,6 @@ services:
       context: ./frontend
     volumes:
       - ./frontend:/usr/share/nginx/html
-    ports:
-      - '3000:3000'
     depends_on:
       backend:
         condition: service_started
@@ -51,3 +49,13 @@ services:
         condition: service_started
       postgres:
         condition: service_healthy
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3000:80'
+    depends_on:
+      backend:
+        condition: service_started
