@@ -115,9 +115,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		Value:    sessionToken,
 		Expires:  expiresAt,
 		HttpOnly: true,
+		Path:     "/",
 	})
 
 	w.WriteHeader(http.StatusOK)
+
 	return
 }
 
@@ -149,7 +151,9 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// unset cookie
-	http.SetCookie(w, &http.Cookie{})
+	http.SetCookie(w, &http.Cookie{
+		Path: "/",
+	})
 
 	w.WriteHeader(http.StatusOK)
 	return
@@ -202,6 +206,7 @@ func refresh(w http.ResponseWriter, r *http.Request) {
 		Value:    newSessionToken,
 		Expires:  expiresAt,
 		HttpOnly: true,
+		Path:     "/",
 	})
 
 	w.WriteHeader(http.StatusOK)
