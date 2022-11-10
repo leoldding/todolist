@@ -1,0 +1,24 @@
+* {
+    font-family: Optima, Helvetica, sans-serif;
+    color: white;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputContainer {
+    margin: 2vh auto;
+}
+
+.errorMessage {
+    color: #ff5757;
+    margin: 1vh auto;
+}
+
+button, input {
+    color: black;
+}
+
