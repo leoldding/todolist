@@ -2,10 +2,13 @@ import React from 'react';
 import Axios from 'axios';
 
 class Login extends React.Component {
-    state = {
-        username: '',
-        password: '',
-    };
+    constructor(props) {
+        super(props)
+        this.state = {
+            username: '',
+            password: '',
+        };
+    }
 
     credentialSubmit = async (event) => {
         event.preventDefault();
@@ -15,6 +18,7 @@ class Login extends React.Component {
                 username: this.state.username,
                 password: this.state.password,
             });
+            this.props.setState({loggedIn:true})
         } catch (err) {
             console.log(err)
         };
