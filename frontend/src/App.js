@@ -1,5 +1,6 @@
 import React from 'react';
 import Login from './components/login';
+import Todo from './components/todo';
 
 class App extends React.Component {
   constructor(props) {
@@ -11,9 +12,8 @@ class App extends React.Component {
   }
 
   render() {
-    const user = this.state.username
-    if (this.state.loggedIn && this.state.username != '') {
-      return (<h1>Hello {user}!</h1>);
+    if (this.state.loggedIn) {
+      return (<Todo user={this.state.username}/>);
     } else {
       return (<Login setState={p => this.setState(p)}/>);
     }
