@@ -214,11 +214,36 @@ func refresh(w http.ResponseWriter, r *http.Request) {
 }
 
 func check(w http.ResponseWriter, r *http.Request) {
-	_, err := r.Cookie("sessionToken")
+	// retrieve cookie
+	sessionToken, err := r.Cookie("sessionToken")
 	if err != nil {
 		log.Printf("Cookie does not exist: %v", err)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
+
+	// check if session exists
+	var username string
+	row := postgres.QueryRow("SELECT username FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+	err = row.Scan(&username)
+	if err != nil {
+		log.Printf("Session does not exist: %v", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	var creds Credentials
+
+	creds.Username = username
+
+	send, err := json.Marshal(creds)
+	if err != nil {
+		log.Printf("JSON marshal error: %v", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+
+	}
+
+	w.Write(send)
 	w.WriteHeader(http.StatusOK)
 }

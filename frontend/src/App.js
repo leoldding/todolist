@@ -6,13 +6,17 @@ class App extends React.Component {
     super(props)
     this.state = {
       loggedIn: false,
+      username: '',
     };
   }
 
   render() {
-    return (
-      this.state.loggedIn ? <h1>LOGGED IN</h1> : <Login setState={p=>this.setState(p)}/>
-    );
+    const user = this.state.username
+    if (this.state.loggedIn && this.state.username != '') {
+      return (<h1>Hello {user}!</h1>);
+    } else {
+      return (<Login setState={p => this.setState(p)}/>);
+    }
   };
 }
 

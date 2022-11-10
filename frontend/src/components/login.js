@@ -14,9 +14,13 @@ class Login extends React.Component {
     }
 
     async componentDidMount() {
+        let returnedUser
         try {
-            await Axios.get('/backend/check');
-            this.props.setState({loggedIn:true})
+            await Axios.get('/backend/check')
+                .then(function (response) {
+                    returnedUser = response.data.username
+                })
+            this.props.setState({loggedIn:true, username: returnedUser})
         } catch(err) {
             console.log(err)
         }
@@ -35,7 +39,7 @@ class Login extends React.Component {
                     username: this.state.username,
                     password: this.state.password,
                 });
-                this.props.setState({loggedIn: true})
+                this.props.setState({loggedIn: true, username: this.state.username})
                 this.setState({userError: '', passError: ''})
             } catch (err) {
                 console.log(err)
