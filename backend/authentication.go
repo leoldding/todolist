@@ -85,7 +85,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	err = row.Scan(&password)
 	if err != nil {
 		log.Printf("User doesn't exist: %v", err)
-		w.WriteHeader(http.StatusUnauthorized)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
@@ -211,4 +211,14 @@ func refresh(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	return
+}
+
+func check(w http.ResponseWriter, r *http.Request) {
+	_, err := r.Cookie("sessionToken")
+	if err != nil {
+		log.Printf("Cookie does not exist: %v", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

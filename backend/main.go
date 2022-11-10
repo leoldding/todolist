@@ -31,5 +31,6 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/refresh", refresh)
+	http.HandleFunc("/check", check)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
