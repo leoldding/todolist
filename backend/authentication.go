@@ -109,6 +109,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(sessionToken)
+
 	// set cookie
 	http.SetCookie(w, &http.Cookie{
 		Name:     "sessionToken",
@@ -152,7 +154,11 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 	// unset cookie
 	http.SetCookie(w, &http.Cookie{
-		Path: "/",
+		Name:     "sessionToken",
+		Value:    "",
+		Expires:  time.Unix(0, 0),
+		HttpOnly: true,
+		Path:     "/",
 	})
 
 	w.WriteHeader(http.StatusOK)
@@ -241,9 +247,7 @@ func check(w http.ResponseWriter, r *http.Request) {
 		log.Printf("JSON marshal error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
-
 	}
 
 	w.Write(send)
-	w.WriteHeader(http.StatusOK)
 }

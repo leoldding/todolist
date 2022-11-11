@@ -13,7 +13,7 @@ class App extends React.Component {
 
   render() {
     if (this.state.loggedIn) {
-      return (<Todo user={this.state.username}/>);
+      return (<Todo user={this.state.username} setState={p => this.setState(p)}/>);
     } else {
       return (<Login setState={p => this.setState(p)}/>);
     }

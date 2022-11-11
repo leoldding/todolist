@@ -29,9 +29,9 @@ class Login extends React.Component {
     credentialSubmit = async (event) => {
         event.preventDefault();
 
-        if (this.state.username == '') {
+        if (this.state.username === '') {
             this.setState({userError: 'Username must not be empty!', passError: ''})
-        } else if (this.state.password == '') {
+        } else if (this.state.password === '') {
             this.setState({passError: 'Password must not be empty!', userError: ''})
         } else {
             try {
@@ -43,9 +43,9 @@ class Login extends React.Component {
                 this.setState({userError: '', passError: ''})
             } catch (err) {
                 console.log(err)
-                if (err.response.status == 400) {
+                if (err.response.status === 400) {
                     this.setState({userError: 'Invalid Username', passError: ''})
-                } else if (err.response.status == 401) {
+                } else if (err.response.status === 401) {
                     this.setState({passError: 'Invalid Password', userError: ''})
                 }
             };

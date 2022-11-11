@@ -10,10 +10,26 @@ class Todo extends React.Component {
         };
     }
 
+    logout = async (event) => {
+        event.preventDefault()
+
+        try {
+            await Axios.get('/backend/logout')
+        } catch(err) {
+            console.log(err)
+        }
+        this.props.setState({loggedIn: false, username: ''})
+    }
+
     render() {
         const user = this.state.user
         return(
-            <h1>Hello {user}!</h1>
+            <div>
+                <h1>Hello {user}!</h1>
+                <form onSubmit={this.logout}>
+                    <button>Logout</button>
+                </form>
+            </div>
         );
     }
 }

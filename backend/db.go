@@ -50,7 +50,16 @@ func connectPostgres() {
 		wg.Done()
 	}()
 
-	wg.Wait()
+	wg.Add(1)
+	go func() {
+		_, err = postgres.Exec("CREATE TABLE IF NOT EXISTS tasks(id SERIAL PRIMARY KEY, username VARCHAR(40), description TEXT);")
+		if err != nil {
+			log.Printf("Error creating tasks table in Postgres: %v", err)
+			return
+		}
+		wg.Done()
+	}()
+
 	return
 }
 
