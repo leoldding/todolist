@@ -4,6 +4,7 @@
 }
 
 .form {
+    margin: 5vh auto;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -20,5 +21,26 @@
 
 button, input {
     color: black;
+    width: 220px;
+    height: 30px;
+    font-size: 15px;
 }
 
+button {
+    width: 100%;
+    cursor: pointer;
+}
+
+a {
+    color: mediumturquoise;
+    cursor: pointer;
+}
+
+@media (min-width: 769px) {
+    .form {
+        background-color: #737373;
+        width: 400px;
+        padding-bottom: 2vh;
+        border-radius: 25px;
+    }
+}

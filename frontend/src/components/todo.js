@@ -26,9 +26,7 @@ class Todo extends React.Component {
         return(
             <div>
                 <h1>Hello {user}!</h1>
-                <form onSubmit={this.logout}>
-                    <button>Logout</button>
-                </form>
+                <p><a onClick={this.logout}>Log Out</a></p>
             </div>
         );
     }
