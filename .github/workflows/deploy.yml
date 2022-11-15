@@ -12,9 +12,11 @@ jobs:
 
       - run: docker build -t leoldding/todolist-frontend ./frontend
       - run: docker build -t leoldding/todolist-backend ./backend
+      - run: docker build -t leoldding/todolist-nginx ./nginx
 
       - run: docker push leoldding/todolist-frontend
       - run: docker push leoldding/todolist-backend
+      - run: docker push leoldding/todolist-nginx
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
