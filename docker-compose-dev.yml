@@ -46,7 +46,6 @@ services:
       - PGDATABASE=postgres
       - PGPASSWORD=postgres_password
       - PGPORT=5432
-      - DOMAIN=localhost
     depends_on:
       mongodb:
         condition: service_started

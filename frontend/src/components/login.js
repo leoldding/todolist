@@ -59,7 +59,7 @@ class Login extends React.Component {
                 this.setState({login: true, username: '', password: '', userError: '', passError: ''})
             } catch (err) {
                 console.log(err)
-                if (err.response.status == 400) {
+                if (err.response.status === 400) {
                     this.setState({userError: 'Username Taken', passError: ''})
                 }
             }

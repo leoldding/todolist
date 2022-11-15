@@ -1,12 +1,10 @@
 package main
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"os"
 	"sync"
@@ -63,6 +61,7 @@ func connectPostgres() {
 	return
 }
 
+/**
 func connectMongo() {
 	// create mongodb uri
 	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", os.Getenv("MONGOUSER"), os.Getenv("MONGOPASSWORD"), os.Getenv("DOMAIN"), os.Getenv("MONGOPORT"))
@@ -81,3 +80,4 @@ func connectMongo() {
 
 	return
 }
+*/
