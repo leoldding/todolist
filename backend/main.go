@@ -19,7 +19,7 @@ func main() {
 	// connect to mongodb
 	wg.Add(1)
 	go func() {
-		connectMongo()
+		// connectMongo()
 		defer wg.Done()
 	}()
 

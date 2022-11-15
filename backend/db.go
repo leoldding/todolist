@@ -4,14 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"os"
 	"sync"
 )
 
 var postgres *sql.DB
-var mongodb *mongo.Client
+
+// var mongodb *mongo.Client
 var err error
 
 func connectPostgres() {
