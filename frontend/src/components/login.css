@@ -19,6 +19,17 @@
     margin: 1vh auto;
 }
 
+.loginSwap {
+    background-color: transparent;
+    border-color: transparent;
+    color: mediumturquoise;
+    width: fit-content;
+}
+
+.inline {
+    display: inline-block;
+}
+
 button, input {
     color: black;
     width: 220px;
