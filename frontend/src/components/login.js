@@ -30,11 +30,13 @@ class Login extends React.Component {
         this.signinFocus.current.focus();
     }
 
-    async componentDidUpdate() {
-        if (this.state.login === true) {
-            this.signinFocus.current.focus();
-        } else {
-            this.signupFocus.current.focus();
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.login !== prevState.login) {
+            if (this.state.login === true) {
+                this.signinFocus.current.focus();
+            } else {
+                this.signupFocus.current.focus();
+            }
         }
     }
 
@@ -61,6 +63,7 @@ class Login extends React.Component {
                     this.setState({passError: 'Invalid Password', userError: ''})
                 }
             };
+            this.signinFocus.current.focus()
         } else {
             try {
                 await Axios.post('/backend/signup', {
@@ -73,7 +76,8 @@ class Login extends React.Component {
                 if (err.response.status === 400) {
                     this.setState({userError: 'Username Taken', passError: ''})
                 }
-            }
+            };
+            this.signupFocus.current.focus();
         }
     };
 
