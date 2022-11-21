@@ -8,6 +8,7 @@ class Todo extends React.Component {
         this.state = {
             user: this.props.user,
             newTask: '',
+            addTaskError: '',
         };
         this.addTaskFocus = React.createRef()
     }
@@ -26,20 +27,26 @@ class Todo extends React.Component {
     addTask = async (event) => {
         event.preventDefault()
 
-        try {
-            await Axios.post('/backend/addTask', {
-                user: this.state.user,
-                task: this.state.newTask,
-            });
-        } catch(err) {
-            console.log(err)
+        if (this.state.newTask === '') {
+            this.setState({addTaskError: 'New task cannot be nothing!'})
         }
-        this.setState({newTask: ''})
-        this.addTaskFocus.current.focus();
+         else {
+            try {
+                await Axios.post('/backend/addTask', {
+                    user: this.state.user,
+                    task: this.state.newTask,
+                });
+            } catch (err) {
+                console.log(err)
+            }
+            this.setState({newTask: '', addTaskError: ''})
+            this.addTaskFocus.current.focus();
+        }
     }
 
     render() {
         const user = this.state.user
+        const addTaskError = this.state.addTaskError
         return(
             <div>
                 <h1>{user}'s To-Do List</h1>
@@ -49,6 +56,7 @@ class Todo extends React.Component {
                             onChange={(event) => this.setState({newTask: event.target.value})}/>
                         <button id={'addItemButton'} className={'transparentButton'}>+</button>
                     </form>
+                    <div className={'errorMessage'}>{addTaskError}</div>
                 </div>
                 <button id={'logout'} className={'transparentButton'} onClick={this.logout}>Log Out</button>
             </div>
