@@ -8,14 +8,17 @@ class Login extends React.Component {
         this.state = {
             username: '',
             password: '',
+            passwordConfirm: '',
             userError: '',
             passError: '',
+            passConfirmError: '',
             login: true,
         };
         this.signinUsernameFocus = React.createRef();
         this.signinPasswordFocus = React.createRef();
         this.signupUsernameFocus = React.createRef();
         this.signupPasswordFocus = React.createRef();
+        this.signupPasswordConfirmFocus = React.createRef();
     }
 
     async componentDidMount() {
@@ -73,11 +76,13 @@ class Login extends React.Component {
             }
         } else {
             if (this.state.username === '') {
-                this.setState({userError: 'Username must not be empty!', passError: ''})
+                this.setState({userError: 'Username must not be empty!', passError: '', passConfirmError: ''})
                 this.signupUsernameFocus.current.focus();
             } else if (this.state.password === '') {
-                this.setState({passError: 'Password must not be empty!', userError: ''})
+                this.setState({passError: 'Password must not be empty!', userError: '', passConfirmError: ''})
                 this.signupPasswordFocus.current.focus();
+            } else if (this.state.password !== this.state.passwordConfirm) {
+                this.setState({passConfirmError: 'Passwords do not match!', userError: '', passError: ''})
             } else {
                 try {
                     await Axios.post('/backend/signup', {
@@ -103,7 +108,7 @@ class Login extends React.Component {
 
     signin = async (event) => {
         event.preventDefault();
-        this.setState({login: true, username: '', password: '', userError: '', passError: ''})
+        this.setState({login: true, username: '', password: '', passwordConfirm: '', userError: '', passError: '', passConfirmError: ''})
     }
 
 
@@ -111,6 +116,7 @@ class Login extends React.Component {
     render() {
         const userErrorMessage = this.state.userError
         const passErrorMessage = this.state.passError
+        const passConfirmErrorMessage = this.state.passConfirmError
         if (this.state.login === true) {
             return (
                 <div className={'container'}>
@@ -148,6 +154,11 @@ class Login extends React.Component {
                                 <input type={'password'} placeholder={'Password'} value={this.state.password} ref={this.signupPasswordFocus}
                                        onChange={(event) => this.setState({password: event.target.value})}/>
                                 <div className={'errorMessage'}>{passErrorMessage}</div>
+                            </div>
+                            <div className={'inputContainer'}>
+                                <input type={'password'} placeholder={'Confirm Password'} value={this.state.passwordConfirm} ref={this.signupPasswordConfirmFocus}
+                                       onChange={(event) => this.setState({passwordConfirm: event.target.value})}/>
+                                <div className={'errorMessage'}>{passConfirmErrorMessage}</div>
                             </div>
                             <button>Sign Up</button>
                         </form>
