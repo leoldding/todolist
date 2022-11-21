@@ -29,10 +29,10 @@ class Login extends React.Component {
                     returnedUser = response.data.username
                 })
             this.props.setState({loggedIn:true, username: returnedUser})
+            this.signinUsernameFocus.current.focus();
         } catch(err) {
             console.log(err)
         }
-        this.signinUsernameFocus.current.focus();
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -89,7 +89,7 @@ class Login extends React.Component {
                         username: this.state.username,
                         password: this.state.password,
                     });
-                    this.setState({login: true, username: '', password: '', userError: '', passError: ''})
+                    this.setState({login: true, username: '', password: '', passwordConfirm: '', userError: '', passError: '', passConfirmError: ''})
                 } catch (err) {
                     console.log(err)
                     if (err.response.status === 400) {
@@ -135,7 +135,7 @@ class Login extends React.Component {
                             </div>
                             <button>Login</button>
                         </form>
-                        <p className={'inline'}>Don't have an account? <button onClick={this.signup} className={'loginSwap'}>Sign Up</button></p>
+                        <p className={'inline'}>Don't have an account? <button onClick={this.signup} className={'transparentButton'}>Sign Up</button></p>
                     </div>
                 </div>
             );
@@ -162,7 +162,7 @@ class Login extends React.Component {
                             </div>
                             <button>Sign Up</button>
                         </form>
-                        <p className={'inline'}>Have an account? <button onClick={this.signin} className={'loginSwap'}>Log In</button></p>
+                        <p className={'inline'}>Have an account? <button onClick={this.signin} className={'transparentButton'}>Log In</button></p>
                     </div>
                 </div>
             );

@@ -69,7 +69,7 @@ func connectMongo() {
 	// connect to mongodb
 	mongodb, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
-		log.Printf("Error connectiong to MongoDB: %v", err)
+		log.Printf("Error connection to MongoDB: %v", err)
 		return
 	}
 	defer func() {

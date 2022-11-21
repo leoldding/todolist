@@ -99,7 +99,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	// create session token
 	sessionToken := uuid.New().String()
-	expiresAt := time.Now().Add(5 * time.Minute)
+	expiresAt := time.Now().Add(30 * time.Minute)
 
 	// insert session token values into database
 	_, err = postgres.Exec("INSERT INTO sessions(sessionname, username, expiration) VALUES ($1, $2, $3);", sessionToken, creds.Username, expiresAt)
