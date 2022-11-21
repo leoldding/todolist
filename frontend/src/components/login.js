@@ -12,8 +12,10 @@ class Login extends React.Component {
             passError: '',
             login: true,
         };
-        this.signinFocus = React.createRef();
-        this.signupFocus = React.createRef();
+        this.signinUsernameFocus = React.createRef();
+        this.signinPasswordFocus = React.createRef();
+        this.signupUsernameFocus = React.createRef();
+        this.signupPasswordFocus = React.createRef();
     }
 
     async componentDidMount() {
@@ -27,15 +29,15 @@ class Login extends React.Component {
         } catch(err) {
             console.log(err)
         }
-        this.signinFocus.current.focus();
+        this.signinUsernameFocus.current.focus();
     }
 
     componentDidUpdate(prevProps, prevState) {
         if (this.state.login !== prevState.login) {
             if (this.state.login === true) {
-                this.signinFocus.current.focus();
+                this.signinUsernameFocus.current.focus();
             } else {
-                this.signupFocus.current.focus();
+                this.signupUsernameFocus.current.focus();
             }
         }
     }
@@ -43,41 +45,54 @@ class Login extends React.Component {
     credentialSubmit = async (event) => {
         event.preventDefault();
 
-        if (this.state.username === '') {
-            this.setState({userError: 'Username must not be empty!', passError: ''})
-        } else if (this.state.password === '') {
-            this.setState({passError: 'Password must not be empty!', userError: ''})
-        } else if (this.state.login === true) {
-            try {
-                await Axios.post('/backend/login', {
-                    username: this.state.username,
-                    password: this.state.password,
-                });
-                this.props.setState({loggedIn: true, username: this.state.username})
-                this.setState({userError: '', passError: ''})
-            } catch (err) {
-                console.log(err)
-                if (err.response.status === 400) {
-                    this.setState({userError: 'Invalid User', passError: ''})
-                } else if (err.response.status === 401) {
-                    this.setState({passError: 'Invalid Password', userError: ''})
-                }
-            };
-            this.signinFocus.current.focus()
+        if (this.state.login === true) {
+            if (this.state.username === '') {
+                this.setState({userError: 'Username must not be empty!', passError: ''})
+                this.signinUsernameFocus.current.focus();
+            } else if (this.state.password === '') {
+                this.setState({passError: 'Password must not be empty!', userError: ''})
+                this.signinPasswordFocus.current.focus();
+            } else {
+                try {
+                    await Axios.post('/backend/login', {
+                        username: this.state.username,
+                        password: this.state.password,
+                    });
+                    this.props.setState({loggedIn: true, username: this.state.username})
+                    this.setState({userError: '', passError: ''})
+                } catch (err) {
+                    console.log(err)
+                    if (err.response.status === 400) {
+                        this.setState({userError: 'Invalid User', passError: ''})
+                        this.signinUsernameFocus.current.focus();
+                    } else if (err.response.status === 401) {
+                        this.setState({passError: 'Invalid Password', userError: ''})
+                        this.signinPasswordFocus.current.focus();
+                    }
+                };
+            }
         } else {
-            try {
-                await Axios.post('/backend/signup', {
-                    username: this.state.username,
-                    password: this.state.password,
-                });
-                this.setState({login: true, username: '', password: '', userError: '', passError: ''})
-            } catch (err) {
-                console.log(err)
-                if (err.response.status === 400) {
-                    this.setState({userError: 'Username Taken', passError: ''})
-                }
-            };
-            this.signupFocus.current.focus();
+            if (this.state.username === '') {
+                this.setState({userError: 'Username must not be empty!', passError: ''})
+                this.signupUsernameFocus.current.focus();
+            } else if (this.state.password === '') {
+                this.setState({passError: 'Password must not be empty!', userError: ''})
+                this.signupPasswordFocus.current.focus();
+            } else {
+                try {
+                    await Axios.post('/backend/signup', {
+                        username: this.state.username,
+                        password: this.state.password,
+                    });
+                    this.setState({login: true, username: '', password: '', userError: '', passError: ''})
+                } catch (err) {
+                    console.log(err)
+                    if (err.response.status === 400) {
+                        this.setState({userError: 'Username Taken', passError: ''})
+                        this.signupUsernameFocus.current.focus();
+                    }
+                };
+            }
         }
     };
 
@@ -102,12 +117,12 @@ class Login extends React.Component {
                     <h2>Log In Here</h2>
                     <form onSubmit={this.credentialSubmit}>
                         <div className={'inputContainer'}>
-                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signinFocus}
+                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signinUsernameFocus}
                                    onChange={(event) => this.setState({username: event.target.value})}/>
                             <div className={'errorMessage'}>{userErrorMessage}</div>
                         </div>
                         <div className={'inputContainer'}>
-                            <input type={'password'} placeholder={'Password'} value={this.state.password}
+                            <input type={'password'} placeholder={'Password'} value={this.state.password} ref={this.signinPasswordFocus}
                                    onChange={(event) => this.setState({password: event.target.value})}/>
                             <div className={'errorMessage'}>{passErrorMessage}</div>
                         </div>
@@ -122,12 +137,12 @@ class Login extends React.Component {
                     <h2>Sign Up Here</h2>
                     <form onSubmit={this.credentialSubmit}>
                         <div className={'inputContainer'}>
-                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signupFocus}
-                                   onChange={(event) => this.setState({username: event.target.value})} autoFocus/>
+                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signupUsernameFocus}
+                                   onChange={(event) => this.setState({username: event.target.value})}/>
                             <div className={'errorMessage'}>{userErrorMessage}</div>
                         </div>
                         <div className={'inputContainer'}>
-                            <input type={'password'} placeholder={'Password'} value={this.state.password}
+                            <input type={'password'} placeholder={'Password'} value={this.state.password} ref={this.signupPasswordFocus}
                                    onChange={(event) => this.setState({password: event.target.value})}/>
                             <div className={'errorMessage'}>{passErrorMessage}</div>
                         </div>
