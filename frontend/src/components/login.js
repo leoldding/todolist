@@ -113,42 +113,46 @@ class Login extends React.Component {
         const passErrorMessage = this.state.passError
         if (this.state.login === true) {
             return (
-                <div className={'form'}>
-                    <h2>Log In Here</h2>
-                    <form onSubmit={this.credentialSubmit}>
-                        <div className={'inputContainer'}>
-                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signinUsernameFocus}
-                                   onChange={(event) => this.setState({username: event.target.value})}/>
-                            <div className={'errorMessage'}>{userErrorMessage}</div>
-                        </div>
-                        <div className={'inputContainer'}>
-                            <input type={'password'} placeholder={'Password'} value={this.state.password} ref={this.signinPasswordFocus}
-                                   onChange={(event) => this.setState({password: event.target.value})}/>
-                            <div className={'errorMessage'}>{passErrorMessage}</div>
-                        </div>
-                        <button>Login</button>
-                    </form>
-                    <p className={'inline'}>Don't have an account? <button onClick={this.signup} className={'loginSwap'}>Sign Up</button></p>
+                <div className={'container'}>
+                    <div className={'form'}>
+                        <h2>Log In Here</h2>
+                        <form onSubmit={this.credentialSubmit}>
+                            <div className={'inputContainer'}>
+                                <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signinUsernameFocus}
+                                       onChange={(event) => this.setState({username: event.target.value})}/>
+                                <div className={'errorMessage'}>{userErrorMessage}</div>
+                            </div>
+                            <div className={'inputContainer'}>
+                                <input type={'password'} placeholder={'Password'} value={this.state.password} ref={this.signinPasswordFocus}
+                                       onChange={(event) => this.setState({password: event.target.value})}/>
+                                <div className={'errorMessage'}>{passErrorMessage}</div>
+                            </div>
+                            <button>Login</button>
+                        </form>
+                        <p className={'inline'}>Don't have an account? <button onClick={this.signup} className={'loginSwap'}>Sign Up</button></p>
+                    </div>
                 </div>
             );
         } else {
             return (
-                <div className={'form'}>
-                    <h2>Sign Up Here</h2>
-                    <form onSubmit={this.credentialSubmit}>
-                        <div className={'inputContainer'}>
-                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signupUsernameFocus}
-                                   onChange={(event) => this.setState({username: event.target.value})}/>
-                            <div className={'errorMessage'}>{userErrorMessage}</div>
-                        </div>
-                        <div className={'inputContainer'}>
-                            <input type={'password'} placeholder={'Password'} value={this.state.password} ref={this.signupPasswordFocus}
-                                   onChange={(event) => this.setState({password: event.target.value})}/>
-                            <div className={'errorMessage'}>{passErrorMessage}</div>
-                        </div>
-                        <button>Sign Up</button>
-                    </form>
-                    <p className={'inline'}>Have an account? <button onClick={this.signin} className={'loginSwap'}>Log In</button></p>
+                <div className={'container'}>
+                    <div className={'form'}>
+                        <h2>Sign Up Here</h2>
+                        <form onSubmit={this.credentialSubmit}>
+                            <div className={'inputContainer'}>
+                                <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signupUsernameFocus}
+                                       onChange={(event) => this.setState({username: event.target.value})}/>
+                                <div className={'errorMessage'}>{userErrorMessage}</div>
+                            </div>
+                            <div className={'inputContainer'}>
+                                <input type={'password'} placeholder={'Password'} value={this.state.password} ref={this.signupPasswordFocus}
+                                       onChange={(event) => this.setState({password: event.target.value})}/>
+                                <div className={'errorMessage'}>{passErrorMessage}</div>
+                            </div>
+                            <button>Sign Up</button>
+                        </form>
+                        <p className={'inline'}>Have an account? <button onClick={this.signin} className={'loginSwap'}>Log In</button></p>
+                    </div>
                 </div>
             );
         }

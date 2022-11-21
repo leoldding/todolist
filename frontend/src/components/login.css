@@ -3,9 +3,16 @@
     color: white;
 }
 
-.form {
-    margin: 5vh auto;
+.container {
+    height: 100vh;
     display: flex;
+    align-items: center;
+}
+
+
+.form {
+    display: flex;
+    margin: auto;
     flex-direction: column;
     align-items: center;
 }
