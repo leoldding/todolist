@@ -12,6 +12,8 @@ class Login extends React.Component {
             passError: '',
             login: true,
         };
+        this.signinFocus = React.createRef();
+        this.signupFocus = React.createRef();
     }
 
     async componentDidMount() {
@@ -24,6 +26,15 @@ class Login extends React.Component {
             this.props.setState({loggedIn:true, username: returnedUser})
         } catch(err) {
             console.log(err)
+        }
+        this.signinFocus.current.focus();
+    }
+
+    async componentDidUpdate() {
+        if (this.state.login === true) {
+            this.signinFocus.current.focus();
+        } else {
+            this.signupFocus.current.focus();
         }
     }
 
@@ -77,6 +88,7 @@ class Login extends React.Component {
     }
 
 
+
     render() {
         const userErrorMessage = this.state.userError
         const passErrorMessage = this.state.passError
@@ -86,8 +98,8 @@ class Login extends React.Component {
                     <h2>Log In Here</h2>
                     <form onSubmit={this.credentialSubmit}>
                         <div className={'inputContainer'}>
-                            <input type={'text'} placeholder={'Username'} value={this.state.username}
-                                   onChange={(event) => this.setState({username: event.target.value})} autoFocus/>
+                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signinFocus}
+                                   onChange={(event) => this.setState({username: event.target.value})}/>
                             <div className={'errorMessage'}>{userErrorMessage}</div>
                         </div>
                         <div className={'inputContainer'}>
@@ -97,7 +109,7 @@ class Login extends React.Component {
                         </div>
                         <button>Login</button>
                     </form>
-                    <p>Don't have an account? <a onClick={this.signup}>Sign Up</a></p>
+                    <p className={'inline'}>Don't have an account? <button onClick={this.signup} className={'loginSwap'}>Sign Up</button></p>
                 </div>
             );
         } else {
@@ -106,7 +118,7 @@ class Login extends React.Component {
                     <h2>Sign Up Here</h2>
                     <form onSubmit={this.credentialSubmit}>
                         <div className={'inputContainer'}>
-                            <input type={'text'} placeholder={'Username'} value={this.state.username}
+                            <input type={'text'} placeholder={'Username'} value={this.state.username} ref={this.signupFocus}
                                    onChange={(event) => this.setState({username: event.target.value})} autoFocus/>
                             <div className={'errorMessage'}>{userErrorMessage}</div>
                         </div>
@@ -117,7 +129,7 @@ class Login extends React.Component {
                         </div>
                         <button>Sign Up</button>
                     </form>
-                    <p>Have an account? <a onClick={this.signin}> Log In</a></p>
+                    <p className={'inline'}>Have an account? <button onClick={this.signin} className={'loginSwap'}>Log In</button></p>
                 </div>
             );
         }
