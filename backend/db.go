@@ -11,7 +11,6 @@ import (
 
 var postgres *sql.DB
 
-// var mongodb *mongo.Client
 var err error
 
 func connectPostgres() {
@@ -60,24 +59,3 @@ func connectPostgres() {
 
 	return
 }
-
-/**
-func connectMongo() {
-	// create mongodb uri
-	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", os.Getenv("MONGOUSER"), os.Getenv("MONGOPASSWORD"), os.Getenv("DOMAIN"), os.Getenv("MONGOPORT"))
-
-	// connect to mongodb
-	mongodb, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
-	if err != nil {
-		log.Printf("Error connection to MongoDB: %v", err)
-		return
-	}
-	defer func() {
-		if err = mongodb.Disconnect(context.TODO()); err != nil {
-			log.Printf("MongoDB disconnect error: %v", err)
-		}
-	}()
-
-	return
-}
-*/

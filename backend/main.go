@@ -16,15 +16,6 @@ func main() {
 		defer wg.Done()
 	}()
 
-	// connect to mongodb
-	wg.Add(1)
-	go func() {
-		// connectMongo()
-		defer wg.Done()
-	}()
-
-	wg.Wait()
-
 	// start all handlers
 	http.HandleFunc("/ping", ping)
 	http.HandleFunc("/signup", signup)
