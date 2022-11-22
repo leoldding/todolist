@@ -1,6 +1,6 @@
 import React from 'react';
 import Axios from 'axios';
-import './todo.css';
+import './styles.css';
 
 class TaskItem extends React.Component {
     constructor(props) {

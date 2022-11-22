@@ -1,6 +1,6 @@
 import React from 'react';
 import Axios from 'axios';
-import './login.css';
+import './styles.css';
 
 class Login extends React.Component {
     constructor(props) {
@@ -93,7 +93,7 @@ class Login extends React.Component {
                 } catch (err) {
                     console.log(err)
                     if (err.response.status === 400) {
-                        this.setState({userError: 'Username Taken', passError: ''})
+                        this.setState({userError: 'Username Taken', passError: '', passConfirmError: '',})
                         this.signupUsernameFocus.current.focus();
                     }
                 };
