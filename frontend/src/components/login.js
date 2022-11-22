@@ -29,10 +29,10 @@ class Login extends React.Component {
                     returnedUser = response.data.username
                 })
             this.props.setState({loggedIn:true, username: returnedUser})
-            this.signinUsernameFocus.current.focus();
         } catch(err) {
             console.log(err)
         }
+        this.signinUsernameFocus.current.focus();
     }
 
     componentDidUpdate(prevProps, prevState) {

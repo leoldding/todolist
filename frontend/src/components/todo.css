@@ -3,7 +3,7 @@
     color: white;
 }
 
-h1 {
+.listContainer {
     margin-top: 2vh;
     margin-left: 2vw;
 }
@@ -34,11 +34,28 @@ h1 {
 .list {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    flex-wrap: nowrap;
 }
 
 .listForm {
     display: flex;
     flex-direction: row;
     background-color: white;
+}
+
+li {
+    font-size: 20px;
+    padding-bottom: 10px;
+    list-style-type: none;
+}
+
+ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.inlineTask {
+    display: flex;
+    flex-direction: row;
 }
