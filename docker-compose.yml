@@ -10,6 +10,9 @@ services:
       - ./frontend:/app
     environment:
       - WDS_SOCKET_PORT=0
+    depends_on:
+      backend:
+        condition: service_started
   backend:
     restart: always
     build:
@@ -31,3 +34,6 @@ services:
       context: ./nginx
     ports:
       - '3000:80'
+    depends_on:
+      backend:
+        condition: service_started

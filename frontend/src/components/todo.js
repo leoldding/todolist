@@ -21,7 +21,7 @@ class TaskItem extends React.Component {
             })
             taskList = this.props.taskList
             for (let i = 0; i < taskList.length; i++) {
-                if (taskList[i][0] == this.state.id) {
+                if (taskList[i][0] === this.state.id) {
                     taskList.splice(i, 1)
                     break
                 }
