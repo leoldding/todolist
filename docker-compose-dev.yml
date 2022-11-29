@@ -1,11 +1,5 @@
 version: '3.9'
 services:
-  mongodb:
-    restart: always
-    image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongo
-      - MONGO_INITDB_ROOT_PASSWORD=mongo_password
   postgres:
     restart: always
     image: postgres:latest
@@ -38,17 +32,12 @@ services:
       - ./backend:/app
     command: reflex -r "\.go$$" -s -- sh -c "go run ./"
     environment:
-      - MONGOUSER=mongo
-      - MONGOPASSWORD=mongo_password
-      - MONGOPORT=27017
       - PGUSER=postgres
       - PGHOST=postgres
       - PGDATABASE=postgres
       - PGPASSWORD=postgres_password
       - PGPORT=5432
     depends_on:
-      mongodb:
-        condition: service_started
       postgres:
         condition: service_healthy
   nginx:
