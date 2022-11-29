@@ -33,7 +33,7 @@ services:
       dockerfile: Dockerfile
       context: ./nginx
     ports:
-      - '3000:80'
+      - '80:80'
     depends_on:
       backend:
         condition: service_started
