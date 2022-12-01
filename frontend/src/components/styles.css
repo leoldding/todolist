@@ -3,6 +3,10 @@
     color: white;
 }
 
+body {
+    background-color: #4f4f4fff;
+}
+
 #addItemButton {
     font-size: 25px;
     border: none;
