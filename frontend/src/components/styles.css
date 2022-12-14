@@ -1,10 +1,10 @@
 * {
     font-family: Optima, Helvetica, sans-serif;
-    color: white;
+    color: #CCCCCC;
 }
 
 body {
-    background-color: #4f4f4fff;
+    background-color: #121212;
 }
 
 #addItemButton {
@@ -117,7 +117,7 @@ ul {
 
 @media (min-width: 769px) {
     .form {
-        background-color: #737373;
+        background-color: #404040;
         width: 400px;
         padding-bottom: 2vh;
         border-radius: 25px;
