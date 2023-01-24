@@ -16,7 +16,7 @@ type Credentials struct {
 }
 
 func ping(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "pong")
+	w.WriteHeader(http.StatusOK)
 	return
 }
 
@@ -33,7 +33,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 	// check if username exists in database
 	var count int
-	row := postgres.QueryRow("SELECT COUNT(*) FROM users WHERE username = $1;", creds.Username)
+	row := postgres.QueryRow("SELECT COUNT(*) FROM todoUsers WHERE username = $1;", creds.Username)
 	err = row.Scan(&count)
 	if err != nil {
 		log.Printf("Postgres username query error: %v", err)
@@ -57,7 +57,7 @@ func signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// insert new user into database
-	_, err = postgres.Exec("INSERT INTO users(username, password) VALUES ($1, $2)", creds.Username, hashedPassword)
+	_, err = postgres.Exec("INSERT INTO todoUsers(username, password) VALUES ($1, $2)", creds.Username, hashedPassword)
 	if err != nil {
 		log.Printf("User insertion error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -81,7 +81,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	// retrieve the stored password hash based on given username
 	var password []byte
-	row := postgres.QueryRow("SELECT password FROM users WHERE username = $1;", creds.Username)
+	row := postgres.QueryRow("SELECT password FROM todoUsers WHERE username = $1;", creds.Username)
 	err = row.Scan(&password)
 	if err != nil {
 		log.Printf("User doesn't exist: %v", err)
@@ -102,7 +102,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	expiresAt := time.Now().Add(30 * time.Minute)
 
 	// insert session token values into database
-	_, err = postgres.Exec("INSERT INTO sessions(sessionname, username, expiration) VALUES ($1, $2, $3);", sessionToken, creds.Username, expiresAt)
+	_, err = postgres.Exec("INSERT INTO todoSessions(sessionname, username, expiration) VALUES ($1, $2, $3);", sessionToken, creds.Username, expiresAt)
 	if err != nil {
 		log.Printf("Postgres insert session error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -136,7 +136,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 	// check if session exists
 	var username string
-	row := postgres.QueryRow("SELECT username FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+	row := postgres.QueryRow("SELECT username FROM todoSessions WHERE sessionname = $1;", sessionToken.Value)
 	err = row.Scan(&username)
 	if err != nil {
 		log.Printf("Session does not exist: %v", err)
@@ -145,7 +145,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// remove session from database
-	_, err = postgres.Exec("DELETE FROM sessions WHERE username = $1;", username)
+	_, err = postgres.Exec("DELETE FROM todoSessions WHERE username = $1;", username)
 	if err != nil {
 		log.Printf("Postgres delete from sessions error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -176,7 +176,7 @@ func refresh(w http.ResponseWriter, r *http.Request) {
 
 	// check if session exists
 	var username string
-	row := postgres.QueryRow("SELECT username FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+	row := postgres.QueryRow("SELECT username FROM todoSessions WHERE sessionname = $1;", sessionToken.Value)
 	err = row.Scan(&username)
 	if err != nil {
 		log.Printf("Session does not exist: %v", err)
@@ -186,7 +186,7 @@ func refresh(w http.ResponseWriter, r *http.Request) {
 
 	// check if cookie has expired
 	if sessionToken.Expires.Before(time.Now()) {
-		_, err = postgres.Exec("DELETE FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+		_, err = postgres.Exec("DELETE FROM todoSessions WHERE sessionname = $1;", sessionToken.Value)
 		if err != nil {
 			log.Printf("Session deletion error: %v", err)
 			w.WriteHeader(http.StatusUnauthorized)
@@ -199,7 +199,7 @@ func refresh(w http.ResponseWriter, r *http.Request) {
 	expiresAt := time.Now().Add(5 * time.Minute)
 
 	// insert session token values into database
-	_, err = postgres.Exec("INSERT INTO sessions(sessionname, username, expiration) VALUES ($1, $2, $3);", newSessionToken, username, expiresAt)
+	_, err = postgres.Exec("INSERT INTO todoSessions(sessionname, username, expiration) VALUES ($1, $2, $3);", newSessionToken, username, expiresAt)
 	if err != nil {
 		log.Printf("Postgres insert session error: %v", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -230,7 +230,7 @@ func check(w http.ResponseWriter, r *http.Request) {
 
 	// check if session exists
 	var username string
-	row := postgres.QueryRow("SELECT username FROM sessions WHERE sessionname = $1;", sessionToken.Value)
+	row := postgres.QueryRow("SELECT username FROM todoSessions WHERE sessionname = $1;", sessionToken.Value)
 	err = row.Scan(&username)
 	if err != nil {
 		log.Printf("Session does not exist: %v", err)

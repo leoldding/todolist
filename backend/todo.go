@@ -30,7 +30,7 @@ func addTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = postgres.Exec("INSERT INTO tasks(username, description) VALUES ($1, $2);", task.Username, task.Description)
+	_, err = postgres.Exec("INSERT INTO todoTasks(username, description) VALUES ($1, $2);", task.Username, task.Description)
 	if err != nil {
 		log.Printf("Task insertion error: %f", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -38,7 +38,7 @@ func addTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var id int
-	row := postgres.QueryRow("SELECT id FROM tasks WHERE username = $1 ORDER BY id DESC LIMIT 1;", task.Username)
+	row := postgres.QueryRow("SELECT id FROM todoTasks WHERE username = $1 ORDER BY id DESC LIMIT 1;", task.Username)
 	err = row.Scan(&id)
 	if err != nil {
 		log.Printf("Id retrieval error: %f", err)
@@ -67,7 +67,7 @@ func retrieveTasks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := postgres.Query("SELECT id, description FROM tasks WHERE username = $1 ORDER BY id;", user.Username)
+	rows, err := postgres.Query("SELECT id, description FROM todoTasks WHERE username = $1 ORDER BY id;", user.Username)
 	if err != nil {
 		log.Printf("Task retrieval error: %f", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -117,7 +117,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = postgres.Exec("DELETE FROM tasks WHERE id = $1 AND description = $2;", item.Id, item.Description)
+	_, err = postgres.Exec("DELETE FROM todoTasks WHERE id = $1 AND description = $2;", item.Id, item.Description)
 	if err != nil {
 		log.Printf("Task deletion error: %f", err)
 		w.WriteHeader(http.StatusInternalServerError)

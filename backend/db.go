@@ -29,7 +29,7 @@ func connectPostgres() {
 	// create tables on initial setup
 	wg.Add(1)
 	go func() {
-		_, err = postgres.Exec("CREATE TABLE IF NOT EXISTS sessions(sessionname TEXT PRIMARY KEY, username VARCHAR(40), expiration TIMESTAMP WITH TIME ZONE);")
+		_, err = postgres.Exec("CREATE TABLE IF NOT EXISTS todoSessions(sessionname TEXT PRIMARY KEY, username VARCHAR(40), expiration TIMESTAMP WITH TIME ZONE);")
 		if err != nil {
 			log.Printf("Error creating sessions table in Postgres: %v", err)
 			return
@@ -39,7 +39,7 @@ func connectPostgres() {
 
 	wg.Add(1)
 	go func() {
-		_, err = postgres.Exec("CREATE TABLE IF NOT EXISTS users(username VARCHAR(40) PRIMARY KEY, password TEXT);")
+		_, err = postgres.Exec("CREATE TABLE IF NOT EXISTS todoUsers(username VARCHAR(40) PRIMARY KEY, password TEXT);")
 		if err != nil {
 			log.Printf("Error creating users table in Postgres: %v", err)
 			return
@@ -49,7 +49,7 @@ func connectPostgres() {
 
 	wg.Add(1)
 	go func() {
-		_, err = postgres.Exec("CREATE TABLE IF NOT EXISTS tasks(id SERIAL PRIMARY KEY, username VARCHAR(40), description TEXT);")
+		_, err = postgres.Exec("CREATE TABLE IF NOT EXISTS todoTasks(id SERIAL PRIMARY KEY, username VARCHAR(40), description TEXT);")
 		if err != nil {
 			log.Printf("Error creating tasks table in Postgres: %v", err)
 			return
